@@ -6,10 +6,14 @@ import BeneficiarySelection from './BeneficiarySelector'
 import { useFundraiserForm } from '@/lib/Context/FormRaiserContext'
 import FundraiserGoalForm from './FundRaiserGoalForm'
 import FundraiserReview from './FundRaiserReview'
+import { useToast } from '@/hooks/use-toast'
 
 
 const StepContent = ({ currentStep, onEdit }) => {
   const { formData, updateFormData } = useFundraiserForm()
+/*   const [termsAccepted, setTermsAccepted] = useState(false) */
+  const { submitForm } = useFundraiserForm()
+  const { toast } = useToast()
 
   const handleImageChange = (file) => {
     updateFormData({ coverImage: file })
@@ -21,6 +25,32 @@ const StepContent = ({ currentStep, onEdit }) => {
 
   const handleGoalChange = (value) => {
     updateFormData({ goal: value })
+  }
+
+  const handleSubmit = async () => {
+    if (!termsAccepted) {
+      toast({
+        title: "Error",
+        description: "Please accept the terms and conditions before submitting.",
+        variant: "destructive",
+      })
+      return
+    }
+
+    try {
+      await submitForm()
+      toast({
+        title: "Success",
+        description: "Your fundraiser has been submitted successfully!",
+      })
+      // Redirect to a success page or dashboard
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to submit fundraiser. Please try again.",
+        variant: "destructive",
+      })
+    }
   }
 
   const renderStepContent = () => {
@@ -51,7 +81,9 @@ const StepContent = ({ currentStep, onEdit }) => {
           />
         )
       case 5:
-        return <FundraiserReview formData={formData} />
+        return <FundraiserReview 
+        formData={formData}
+        />
       default:
         return <div>Unknown step</div>
     }

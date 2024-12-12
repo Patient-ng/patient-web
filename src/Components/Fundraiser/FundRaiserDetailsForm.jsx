@@ -146,7 +146,19 @@ const FundraiserDetailsForm = ({ formData, updateFormData }) => {
             <label className="block text-sm font-medium mb-2">
               Please select campaign category
             </label>
-            <RadioGroup
+            <Select value={formData.categories} onValueChange={handleCategoryChange}>
+              <SelectTrigger>
+                <SelectValue placeholder="Category 1" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((category) => (
+                  <SelectItem key={category} value={category}>
+                    {category}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {/* <RadioGroup
               value={formData.category}
               onValueChange={handleCategoryChange}
               className="space-y-1 gap-6 md:flex justify-stretch p-2 bg-gray-100/50 "
@@ -157,7 +169,7 @@ const FundraiserDetailsForm = ({ formData, updateFormData }) => {
                   <label className="text-sm" htmlFor={category}>{category}</label>
                 </div>
               ))}
-            </RadioGroup>
+            </RadioGroup> */}
           </div>
         </div>
 

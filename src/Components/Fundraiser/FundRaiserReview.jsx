@@ -2,6 +2,8 @@ import React from 'react'
 import { Card } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Progress } from "@/components/ui/progress"
+import { Checkbox } from '../ui/checkbox'
+import { Label } from '../ui/label'
 
 const FundraiserReview = ({ formData }) => {
   const { coverImage, title, state, lga, description, beneficiaryType, goal } = formData

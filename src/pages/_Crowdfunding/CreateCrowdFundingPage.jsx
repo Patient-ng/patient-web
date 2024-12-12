@@ -7,9 +7,12 @@ import StepContent from '@/components/fundraiser/StepContent'
 import { FundraiserFormProvider, useFundraiserForm } from '@/lib/Context/FormRaiserContext'
 import { AppLayout } from '@/components/AppLayout'
 import { fundraiserSteps } from '@/lib/FundRaiserSteps'
+import { Checkbox } from '@/Components/ui/checkbox'
+import { Label } from '@/Components/ui/label'
 
 const CreateFundraiserContent = () => {
   const [currentStep, setCurrentStep] = useState(1)
+  const [termsAccepted, setTermsAccepted] = useState(false)
   const { submitForm } = useFundraiserForm()
   const { toast } = useToast()
 
@@ -57,7 +60,10 @@ const CreateFundraiserContent = () => {
           </div>
           <div className="flex-grow flex flex-col overflow-hidden h-[80%]">
             <div className="flex-grow overflow-y-scroll px-4 py-6">
-              <StepContent currentStep={currentStep} onEdit={handleEdit} />
+              <StepContent 
+              currentStep={currentStep} 
+              onEdit={handleEdit} 
+              />
             </div>
           </div>
         </div>
@@ -70,8 +76,24 @@ const CreateFundraiserContent = () => {
           >
             <ArrowLeft className="h-4 w-4" /> Prev
           </Button>
+          {currentStep === fundraiserSteps.length && (
+            <div className="flex items-center space-x-2 mb-2 sm:mb-0">
+              <Checkbox 
+                id="terms" 
+                checked={termsAccepted}
+                onCheckedChange={setTermsAccepted}
+              />
+              <Label htmlFor="terms" className="text-sm text-gray-600">
+                I accept the terms and conditions
+              </Label>
+            </div>
+          )}
           {currentStep === fundraiserSteps.length ? (
-            <Button onClick={handleSubmit} className="flex items-center gap-2">
+            <Button 
+              onClick={handleSubmit} 
+              className="flex items-center gap-2"
+              disabled={!termsAccepted}
+            >
               Submit
             </Button>
           ) : (
