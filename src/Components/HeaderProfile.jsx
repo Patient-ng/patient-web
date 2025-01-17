@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button"
 import { LogOut } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
-const HeaderProfile = ({ user }) => {
+const HeaderProfile = ({ user, handleLogout }) => {
   const handleSignOut = () => {
     // Implement sign out logic here
+    handleLogout()
     console.log('User signed out')
   }
 

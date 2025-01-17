@@ -1,7 +1,7 @@
 export const fundraiserSteps = [
   {
     number: 1,
-    title: "Share the details of your fundraising with donors",
+    title: "Share the details of your Campaign",
     description: "Please provide your name and email",
   },
     {
@@ -11,7 +11,7 @@ export const fundraiserSteps = [
     },
     {
       number: 3,
-      title: "Who are you fundraising for?",
+      title: "Who are you campaigning for?",
       description: "Please provide your name and email",
     },
     {

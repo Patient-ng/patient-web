@@ -1,10 +1,8 @@
-import React from 'react'
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
 import { CustomButton } from '../CustomButton'
 import { Link } from 'react-router-dom'
 
 export function SignUpSection() {
+  
   return (
     <section className="py-16 my-8 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto text-center bg-emerald-50">
       <h2 className="text-3xl font-bold mb-1">Sign up as an advocate today</h2>

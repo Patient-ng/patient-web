@@ -3,21 +3,22 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import AuthFooter from '@/components/auth/AuthFooter'
-import { useNavigate } from 'react-router'
+import { Link, useNavigate } from 'react-router'
+import OtpInput from '@/Components/OTPInput'
+import axiosInstance from '@/utils/axiosInstance'
+import useAuthStore from '@/store/authStore'
 
 export default function VerifyAccount() {
-  const [otp, setOtp] = useState(['', '', '', '', '', ''])
+  const [otp, setOtp] = useState('')
+  const {register, regSuccess} =useAuthStore()
+  //const [otp, setOtp] = useState(['', '', '', '', '', ''])
   const inputRefs = useRef([])
   const [isResending, setIsResending] = useState(false)
   const [timer, setTimer] = useState(0)
   const navigate = useNavigate()
+  const [email, setEmail] = useState('tobibakare2024@gmail.com')
 
-  useEffect(() => {
-    // Focus first input on mount
-    if (inputRefs.current[0]) {
-      inputRefs.current[0].focus()
-    }
-  }, [])
+  
 
   useEffect(() => {
     if (timer > 0) {
@@ -28,46 +29,6 @@ export default function VerifyAccount() {
     }
   }, [timer])
 
-  const handleChange = (index, value) => {
-    // Only allow numbers
-    if (!/^\d*$/.test(value)) return
-
-    const newOtp = [...otp]
-    newOtp[index] = value
-
-    setOtp(newOtp)
-
-    // Move to next input if value is entered
-    if (value !== '' && index < 5) {
-      inputRefs.current[index + 1].focus()
-    }
-  }
-
-  const handleKeyDown = (index, e) => {
-    // Move to previous input on backspace
-    if (e.key === 'Backspace' && index > 0 && otp[index] === '') {
-      inputRefs.current[index - 1].focus()
-    }
-  }
-
-  const handlePaste = (e) => {
-    e.preventDefault()
-    const pastedData = e.clipboardData.getData('text').slice(0, 6)
-    
-    if (!/^\d+$/.test(pastedData)) return
-
-    const newOtp = [...otp]
-    pastedData.split('').forEach((char, index) => {
-      if (index < 6) newOtp[index] = char
-    })
-    setOtp(newOtp)
-
-    // Focus last filled input or first empty input
-    const lastFilledIndex = newOtp.findLastIndex(val => val !== '')
-    if (lastFilledIndex < 5) {
-      inputRefs.current[lastFilledIndex + 1].focus()
-    }
-  }
 
   const handleResendCode = async () => {
     setIsResending(true)
@@ -79,19 +40,50 @@ export default function VerifyAccount() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const otpString = otp.join('')
-    if (otpString.length !== 6) return
     
-    console.log('Submitting OTP:', otpString)
-    // Handle OTP verification
-    navigate('/personalize')
+    const regData = JSON.parse(localStorage.getItem('registration'))
+   try {
+    const res = await axiosInstance.post("/validate-signup-otp", { email: regData?.email, emailOtp: otp  });
+    if(res.data.code === 200){
+      //const regData = JSON.parse(localStorage.getItem('registration'))
+     await register(regData)
+    }
+   } catch (error) {
+    console.log(error)
+   }
+    
+    //navigate('/personalize')
   }
+
+
+ /*  const regData = JSON.parse(localStorage.getItem('registration'))
+  console.log('REG DATA', regData) */
+
+  useEffect(() => {
+   if(regSuccess){
+    navigate('/personalize')
+   }
+  },[regSuccess])
+
+  const onOtpSubmit = (otp) => {
+    console.log("Login Successful", otp);
+    
+    setOtp(otp)
+  };
+  console.log("OTP", otp);
 
   return (
     <>
      <div className="min-h-screen flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-[400px] md:border md:border-gray-300 rounded-xl p-[20px]">
         <div className="space-y-1 text-center">
+        <Link to="/">
+        
+        <div className="flex justify-center">
+          <img src="/logo.png" alt="logo" className='w-[60px] h-[60px]' />
+        </div>
+    
+      </Link>
           <h2 className="text-2xl font-semibold">Verify Your Account</h2>
           <p className="text-sm text-gray-600">
             A verification code has been sent to your email. Please
@@ -100,22 +92,11 @@ export default function VerifyAccount() {
         </div>
         <div>
           <form onSubmit={handleSubmit} className="space-y-4 my-4">
-            <div className="flex justify-between gap-2">
-              {otp.map((digit, index) => (
-                <Input
-                  key={index}
-                  type="text"
-                  maxLength={1}
-                  value={digit}
-                  onChange={(e) => handleChange(index, e.target.value)}
-                  onKeyDown={(e) => handleKeyDown(index, e)}
-                  onPaste={handlePaste}
-                  ref={(el) => (inputRefs.current[index] = el)}
-                  className="w-12 h-12 text-center text-lg font-semibold"
-                  autoComplete="off"
-                />
-              ))}
-            </div>
+            
+            
+            <OtpInput length={6} 
+              onOtpSubmit={onOtpSubmit} 
+              />
 
             <div className="text-center">
               {timer > 0 ? (
@@ -137,7 +118,7 @@ export default function VerifyAccount() {
             <Button 
               type="submit" 
               className="w-full bg-emerald-500 hover:bg-emerald-600"
-              disabled={otp.some(digit => digit === '')}
+              //disabled={otp?.some(digit => digit === '')}
             >
               Verify my account
             </Button>

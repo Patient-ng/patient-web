@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { CustomButton } from '../CustomButton'
 
-const steps = [
+/* const steps = [
   {
     number: 1,
     title: 'Informal Complaint (Stage 1)',
@@ -28,13 +28,41 @@ const steps = [
     title: 'Request the HSE to review the compl...',
     content: 'If you are not satisfied with the response to your complaint, you can request the HSE to review your case. This is an independent review process.'
   }
+] */
+
+  const steps = [
+  {
+    number: 1,
+    title: 'Informal Complaint',
+    content: 'If you are unhappy with the care you received in a hospital, you can raise your issue by making a verbal complaint with any hospital staff you find. This issue might be resolved without needing to make a formal, written complaint to us at patient.ng.'
+  },
+  {
+    number: 2,
+    title: 'Formal Complaint',
+    content: 'Your name, Phone number and Email address.  <br /> Name, Address and Department of the hospital.\n\n\n Who was involved, dates and times of the experience. \nAn accurate description of what happened. \n Your complaint should also outline what you have done to resolve the issue to date and what you want to happen now to resolve your issue. /n You can also attach any documentation to your complaint that you feel is relevant, through the online form or via email. \nIn your written complaint, you should grant permission to patient.ng to access your personal confidential information. If you don’t grant us permission to access your personal confidential information, we may not be able to effectively process or resolve your complaint..'
+  },
+  {
+    number: 3,
+    title: 'What to Include in your Complaint',
+    content: 'Your name, Phone number and Email address. Name, Address and Department of the hospital. Who was involved, dates and times of the experience. An accurate description of what happened. Your complaint should also outline what you have done to resolve the issue to date and what you want to happen now to resolve your issue. You can also attach any documentation to your complaint that you feel is relevant, through the online form or via email. In your written complaint, you should grant permission to patient.ng to access your personal confidential information. If you don’t grant us permission to access your personal confidential information, we may not be able to effectively process or resolve your complaint.'
+  },
+  {
+    number: 4,
+    title: 'Submit your complaint',
+    content: 'You may now proceed to submit your complaint online through the web form or via email complaints@patient.ng'
+  },
+  {
+    number: 5,
+    title: 'Request Further Review',
+    content: 'If you are still unsatisfied with the response you received from the hospital through our service, you may consider requesting a further review by our professional patient advocates.'
+  }
 ]
 
 export function ComplaintGuideSection() {
   const [selectedStep, setSelectedStep] = useState(1)
 
   return (
-    <section id='how to make complaint' className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <section id='complaintGuide' className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       <h2 className="text-3xl font-bold mb-4">Step-by-Step Guide to Making a Complaint</h2>
       <p className="text-gray-600 mb-8">
         This guide explains the different stages of the HSE Your Service, Your Say complaints policy.

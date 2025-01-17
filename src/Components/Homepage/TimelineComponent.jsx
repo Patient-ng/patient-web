@@ -4,33 +4,33 @@ import { Card, CardContent } from "@/components/ui/card";
 const TimelineSection = () => {
   const timelineData = [
     {
-      year: '2024',
-      achievements: [
-        'Launched advanced AI-driven XXX.',
-        'Reached 10 million users globally.',
-        'Rolled out new subscription tiers for all patients.',
-        'Released the mobile app for both iOS and Android.',
-        'Introduced real-time collaboration tools.'
-      ]
-    },
-    {
       year: '2023',
       achievements: [
-        'Launched advanced AI-driven XXX.',
-        'Reached 10 million users globally.',
-        'Rolled out new subscription tiers for all patients.',
-        'Released the mobile app for both iOS and Android.',
-        'Introduced real-time collaboration tools.'
+        'Grew advocacy network to 24 clinics.',
+        '⁠Reached 183 patients nationally',
+        '⁠Partnered with 3 local patient organisations ',
+        '⁠Resolved 7 patient complaints through mediation ',
+        '⁠Launched prescription discounts programs'
       ]
     },
     {
-      year: '2022',
+      year: '2024',
       achievements: [
-        'Launched advanced AI-driven XXX.',
-        'Reached 10 million users globally.',
-        'Rolled out new subscription tiers for all patients.',
-        'Released the mobile app for both iOS and Android.',
-        'Introduced real-time collaboration tools.'
+        'Launched the patient.ng web platform',
+        'Grew online community to 540 members',
+        'Expanded rewards, loyalty and discounts programs',
+        '⁠Advocated in 34 patient rights cases',
+        'Rolled out the Patient.ng podcast'
+      ]
+    },
+    {
+      year: '2025',
+      achievements: [
+        'Releasing the iPatient mobile app for both iOS and Android',
+        'Developing Patient Advocates Training Program',
+        'Lanching the Health Insurance self-paced online course',
+        'Expand advocacy network to all 36 states',
+        '⁠Grow patient community to 1000 users'
       ]
     }
   ];
@@ -41,11 +41,11 @@ const TimelineSection = () => {
         <span className="text-emerald-500">About Us</span>
         
         <h2 className="mt-4 text-3xl font-bold text-white md:text-5xl">
-          Header Text for About Use Section which can be this long.
+        Find patient support that actually works!
         </h2>
         
         <p className="mt-6 max-w-3xl text-lg text-gray-300">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent cursus tristique justo vitae semper. In eu euismod erat. Vestibulum dictum ex eu euismod gravida. Ut mollis sem eu felis ultrices aliquet. Proin pellentesque aliquet.
+        We are a public-health venture for sustainable patient support systems in Nigeria. Through our campaigns and initiatives, we facilitate a community where members feel supported and empowered to improve their health outcomes.
         </p>
 
         <div className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-3">

@@ -67,6 +67,7 @@ const StepContent = ({ currentStep, onEdit }) => {
       case 3:
         return (
           <BeneficiarySelection
+            formData={formData} updateFormData={updateFormData}
             value={formData.beneficiaryType}
             onChange={handleBeneficiaryChange}
             onEdit={onEdit}
@@ -90,10 +91,10 @@ const StepContent = ({ currentStep, onEdit }) => {
   }
 
   return (
-    <div className="space-y-8 py-4">
+    <div className="space-y-8 py-4 ">
       <div className='text-center md:text-left'>
-        <h1 className="text-2xl font-semibold">Create fundraiser</h1>
-        <p className="text-gray-500">Start a fundraising journey</p>
+        <h1 className="text-2xl font-semibold">Create Campaign</h1>
+        <p className="text-gray-500">Start your Campaign journey</p>
       </div>
       {renderStepContent()}
     </div>

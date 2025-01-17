@@ -1,13 +1,21 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ProfileDetails } from '@/components/account/ProfileDetails'
 import { AccountInformationFormTab } from '@/components/account/AccountInformationFormTab'
 import { AppLayout } from '@/components/AppLayout'
 import CrowdfundingCardTab from '@/components/account/CrowdfundingCardTab'
 import HospitalReviewsTab from '@/components/account/HospitalReviewsTab'
 import AdvocacyTab from '@/components/account/AdvocacyTab'
+import useAuthStore from '@/store/authStore'
 
 
 export default function AccountPage() {
+  const {getme, myData, updateUserProfile} = useAuthStore()
+
+  useEffect(()=> {
+    getme()
+  },[])
+
+  console.log("USER INFORMATION", myData)
   const [activeTab, setActiveTab] = useState('Account Information')
   const [formData, setFormData] = useState({
     firstName: '',
@@ -16,12 +24,28 @@ export default function AccountPage() {
     phoneNumber: '',
     age: '',
     gender: '',
-    streetAddress: '',
+    address: '',
     state: '',
     lga: '',
-    oldPassword: '',
-    newPassword: '',
   })
+  const [image, setImage] = useState('')
+  const [imageUrl, setImageUrl] = useState('')
+
+  useEffect(()=> {
+  if(myData){
+   setFormData({
+    firstName: myData?.firstName,
+    lastName: myData?.lastName,
+    email: myData?.email,
+    phone: myData?.phone,
+    age: myData?.age,
+    gender: myData?.gender,
+    address: myData?.address,
+    state: myData?.state,
+    lga: myData?.lga,
+  })
+  }
+  },[myData])
 
   const reviews = [
     {
@@ -58,10 +82,31 @@ export default function AccountPage() {
     }))
   }
 
-  const handleSubmit = (e) => {
+  const handleImageChange = async (e) => {
+    setImage(e.target.files[0]);
+    console.log("Image file", image)
+    const url = await URL.createObjectURL(e.target.files[0] || image);
+    setImageUrl(url)
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
     console.log('Form submitted with data:', formData)
     // Here you would typically send the data to your backend
+    await updateUserProfile({ 
+      id: myData?._id,
+      firstName: formData?.firstName, 
+      lastName: formData?.lastName, 
+      email: formData?.email, 
+      phone: formData?.phone, 
+      image: image, 
+      age: formData?.age, 
+      gender: formData?.gender, 
+      address: formData?.address, 
+      state: formData?.state, 
+      lga: formData?.lga
+    })
+    getme()
   }
 
   return (
@@ -70,7 +115,7 @@ export default function AccountPage() {
             <h2 className='text-3xl font-semibold'>Account</h2>
             {/*Desktop screen*/}
             <div className="flex flex-col sm:flex-row gap-8">
-                <ProfileDetails activeTab={activeTab} setActiveTab={setActiveTab} />
+                <ProfileDetails activeTab={activeTab} setActiveTab={setActiveTab} userData={myData} handleImageChange={handleImageChange} image={image} setImage={setImage} imageUrl={imageUrl} />
                 <div className="flex-1 bg-white p-8 rounded-lg shadow-sm">
                     {activeTab === 'Account Information' && (
                     <AccountInformationFormTab
@@ -81,6 +126,7 @@ export default function AccountPage() {
                     )}
                     {activeTab === 'Crowdfunding' && (
                     <CrowdfundingCardTab
+                    userId={myData?._id}
                     status="awaiting_review"
                     image="baby.jpg"
                     organizer={{

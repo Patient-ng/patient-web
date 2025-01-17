@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Heart, Share2 } from 'lucide-react'
 import { Button } from "@/components/ui/button"
@@ -8,6 +8,7 @@ import { AllDonationsModal } from '@/components/crowdFunding/AllDonationsModal'
 import { DonationModal } from '@/components/crowdFunding/DonationModal'
 import Header from '@/components/header'
 import Footer from '@/components/Footer'
+import { UseCampaignStore } from '@/store/campaignStore'
 
 // Mock data - replace with API call later
 const campaignData = {
@@ -51,10 +52,18 @@ const campaignData = {
 }
 
 export default function CampaignDetails() {
+  const {getCampaign, singleCampaign} = UseCampaignStore()
   const [isDonateModalOpen, setIsDonateModalOpen] = useState(false)
   const [isAllDonationModalOpen, setIsAllDonationModalOpen] = useState(false)
 
   const { id } = useParams()
+
+  useEffect(()=> {
+    getCampaign({id: id})
+  },[])
+
+  console.log("campaign id", id)
+  console.log("CAMPAING DETAILS", singleCampaign)
   const progress = (campaignData.raised / campaignData.goal) * 100
 
   return (
@@ -64,25 +73,26 @@ export default function CampaignDetails() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2">
-            <h1 className="text-3xl font-bold mb-6">{campaignData.title}</h1>
-            <div className="rounded-lg h-[400px] relative md:mb-20">
-              <img src='/dental checkup.png' alt='checkup' className='object-cover absolute w-full'/>
+            <h1 className="text-3xl font-bold mb-6">Save {singleCampaign?.fundraisingFor}</h1>
+            <div className="rounded-lg h-[400px] relative md:mb-8">
+              <img crossOrigin='anonymous' src={`${import.meta.env.VITE_MAIN_URL}/${singleCampaign?.image}`} alt='checkup' className='object-cover absolute w-full h-full'/>
             </div>
             <div className="flex items-center space-x-2 mb-6">
-              <Avatar>
+              {/* <Avatar>
                 <AvatarImage src={campaignData.organizer.avatar} />
                 <AvatarFallback>AO</AvatarFallback>
-              </Avatar>
+              </Avatar> */}
               <div>
-                <span className="text-gray-600">{campaignData.organizer.name}</span>
-                <span className="text-gray-500"> is organising a fundraiser on behalf of </span>
-                <span className="text-gray-600">{campaignData.beneficiary}</span>
+                <span className="text-gray-600 text-base">{singleCampaign?.user?.firstName} {singleCampaign?.user?.lastName}</span>
+                <span className="text-gray-500 text-base"> is organising a fundraiser for {singleCampaign?.title} </span>
+                {/* <span className="text-gray-600">{campaignData.beneficiary}</span> */}
               </div>
             </div>
             <div className="prose max-w-none">
-              {campaignData.content.split('\n\n').map((paragraph, index) => (
+              {/* {campaignData.content.split('\n\n').map((paragraph, index) => (
                 <p key={index} className="text-gray-600 mb-4">{paragraph}</p>
-              ))}
+              ))} */}
+              <p className="text-gray-600 mb-4">{singleCampaign?.description}</p>
             </div>
           </div>
 
@@ -117,7 +127,7 @@ export default function CampaignDetails() {
                 </Button>
                 <Button variant="outline" className="flex-1 flex items-center border-[#10b981] text-[#10b981]">
                   <Heart className="h-4 w-4 mr-2" color='#10b981' />
-                  {campaignData.likes} Likes
+                  {singleCampaign?.likes?.length} Likes
                 </Button>
               </div>
 

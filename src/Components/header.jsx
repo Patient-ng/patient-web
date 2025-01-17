@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 //import { Link, useLocation } from 'react-router-dom'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Button } from "@/components/ui/button"
 import NavigationMenuComponent from './NavigationMenuComponent'
 import { Logo } from '@/icons/Logo'
@@ -12,11 +12,24 @@ import { SlTrophy } from "react-icons/sl";
 import { ChevronDown } from 'lucide-react'
 import { ProfileDetails } from './account/ProfileDetails'
 import HeaderProfile from './HeaderProfile'
+import useAuthStore from '@/store/authStore'
 
 const Header = ({ isLoggedIn }) => {
+  const {getme, myData, logout} = useAuthStore()
   const [isOpen, setIsOpen] = useState(false)
   const [openDropdowns, setOpenDropdowns] = useState({})
   const location = useLocation()
+  const navigate = useNavigate()
+
+  useEffect(()=>{
+    getme()
+  },[])
+
+  const handleLogout = async () => {
+    await logout()
+    navigate('/login')
+
+  }
 
   // Mock user data - replace with actual user data from your auth system
   const user = {
@@ -88,7 +101,7 @@ const Header = ({ isLoggedIn }) => {
   ]
 
   return (
-    <header className="container border-b bg-yellow-400">
+    <header className="container border-b bg-yellow-400 z-50">
       <div className="w-full mx-auto flex h-16 items-center justify-between px-4 bg-white fixed z-30">
         <Link to="/" className="flex items-center gap-2 group">
           <Logo />
@@ -96,14 +109,14 @@ const Header = ({ isLoggedIn }) => {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex md:items-center md:gap-8 md:px-2">
+        <nav className="hidden md:flex md:items-center md:gap-8 md:px-2 z-50">
           <NavigationMenuComponent items={navigationItems} />
         </nav>
 
         {/* Desktop Auth Buttons or User Profile */}
         <div className="hidden items-center gap-4 md:flex">
-          {!isLoggedIn ? (
-            <UserProfileDropdown user={user} />
+          {myData ? (
+            <UserProfileDropdown user={myData} handleLogout={handleLogout} />
           ) : (
             <>
               <Button variant="outline" asChild>
@@ -138,8 +151,9 @@ const Header = ({ isLoggedIn }) => {
 
         {/* Mobile Menu */}
         {isOpen && (
-          <div className="absolute top-16 left-0 right-0 bg-white z-10 shadow-md md:hidden">
+          <div className="absolute top-16 left-0 right-0 bg-white z-50 shadow-md md:hidden ">
             <nav className="flex flex-col p-4">
+            
               {navigationItems.map((item, index) => (
                 <React.Fragment key={index}>
                 {item.children ? (
@@ -186,18 +200,30 @@ const Header = ({ isLoggedIn }) => {
                 )}
               </React.Fragment>
               ))}
-              {!isLoggedIn && (
+              {!myData && (
                 <>
-                  <Link to="/signup" className="py-2 text-lg font-medium hover:text-gray-600" onClick={toggleMenu}>
+                <div className='flex-col space-y-2 mt-12'> 
+                  <Button className="w-full border border-emerald-500 bg-transparent text-emerald-500">
+                  <Link to="/signup">Sign Up</Link>
+                  </Button>
+
+                  <Button className="w-full bg-emerald-500 hover:bg-emerald-600" >
+                    <Link to="/login">Log In</Link>
+                  </Button>
+                </div>
+
+                  {/* <Link to="/signup" className="py-2 text-lg font-medium hover:text-gray-600" onClick={toggleMenu}>
                     Sign Up
                   </Link>
                   <Link to="/login" className="py-2 text-lg font-medium hover:text-gray-600" onClick={toggleMenu}>
                     Log In
-                  </Link>
+                  </Link> */}
                 </>
               )}
-              {isLoggedIn && (
-                <HeaderProfile user={user} />
+              {myData && (
+                <div className='mt-10'>
+                  <HeaderProfile user={user} handleLogout={handleLogout} />
+                </div>
               )}
             </nav>
           </div>

@@ -79,12 +79,20 @@ const FeaturedCampaigns = () => {
 
 export default FeaturedCampaigns */
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from "@/components/ui/button"
 import CampaignCard from './CampaignCard'
 import { Link } from 'react-router-dom'
+import { UseCampaignStore } from '@/store/campaignStore'
 
 const FeaturedCampaigns = () => {
+  const {getAllCampaigns, campaignData} = UseCampaignStore()
+
+  useEffect(()=> {
+    getAllCampaigns()
+  },[])
+
+  console.log("ALL CAMPAINGS", campaignData)
 
     const [campaigns, setCampaigns] = useState([
       {
@@ -157,8 +165,8 @@ const FeaturedCampaigns = () => {
           Discover impactful health causes and contribute to campaigns making a difference.
         </p>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {campaigns?.map((campaign, index) => (
-            <CampaignCard key={index} {...campaign} onLike={() => handleLike(campaign.id)} />
+          {campaignData?.slice(0, 3).map((campaign, index) => (
+            <CampaignCard key={index} campaign={campaign} onLike={() => handleLike(campaign?._id)} />
           ))}
         </div>
       </div>

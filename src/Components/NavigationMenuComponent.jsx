@@ -19,7 +19,7 @@ const NavigationMenuComponent = ({ items }) => {
               <>
                 <NavigationMenuTrigger>{item.title}</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="grid w-[350px] gap-3 p-4 md:grid-cols-1">
+                  <ul className="grid w-[350px] gap-3 p-4 md:grid-cols-1 ">
                     {item.children.map((child, childIndex) => (
                       <li key={childIndex}>
                         <NavigationMenuLink asChild>

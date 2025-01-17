@@ -51,6 +51,7 @@ const FundraiserReview = ({ formData }) => {
             <AvatarImage src={organizer.avatar} alt={organizer.name} />
             <AvatarFallback>{organizer.name[0]}</AvatarFallback>
           </Avatar>
+          <p>NAME OF FUND {formData?.firstName}</p>
           <p className="text-sm text-gray-600">
             <span className="font-medium text-gray-900">{organizer.name}</span>
             {' '}is organising a{' '}

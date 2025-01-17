@@ -33,7 +33,7 @@ const CampaignCard = ({ image, location, title, raised, goal, lastDonation }) =>
   export default CampaignCard */
 
 
-  const CampaignCard = ({ image, title, raised, goal, description, location, isLiked, likes, onLike }) => {
+  const CampaignCard = ({ image, title, raised, goal, description, location, isLiked, likes, onLike, campaign }) => {
     const raisedNum = parseInt(raised, 10)
     const goalNUm = parseInt(goal, 10)
 
@@ -47,10 +47,12 @@ const CampaignCard = ({ image, location, title, raised, goal, lastDonation }) =>
     
     
     return (
-      <Link to={`/campaigns/${title.toLowerCase().replace(/ /g, '-')}`}>
+      
+      <Link to={`/campaigns/${campaign?._id}`}>
+        {/* <Link to={`/campaigns/${title?.toLowerCase().replace(/ /g, '-')}`}> */}
       <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
         <div className="relative">
-          <img src={image} alt={title} className="w-full h-48 object-cover" />
+          <img crossOrigin='anonymous' src={`${import.meta.env.VITE_MAIN_URL}/${campaign?.image}`} alt={campaign?.title} className="w-full h-48 object-cover" />
           <Button
             variant="ghost"
             className="absolute h-12 bottom-0 right-4 shadow-sm transform translate-y-1/2 bg-white  hover:bg-gray-50 flex items-center gap-1.5 rounded-sm px-4 py-2"
@@ -64,18 +66,18 @@ const CampaignCard = ({ image, location, title, raised, goal, lastDonation }) =>
               width={10}
             />
             <span className={`text-sm ${isLiked ? 'text-emerald-500' : 'text-gray-500'}`}>
-              {likes}
+              {campaign?.likes?.length}
             </span>
           </Button>
         </div>
         <div className="p-4">
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <MapPin className="h-4 w-4 text-emerald-400" />
-            {location}
+            {campaign?.location?.state} {campaign?.location?.lga}
           </div>
-          <h3 className="font-semibold mb-2">{title}</h3>
+          <h3 className="font-semibold my-2">Save {campaign?.fundraisingFor}</h3>
           <p className="text-gray-600">
-            {description}
+            {campaign?.description.slice(0, 150)}...
           </p>
 
           {/* DO NOT DELETE THIS COMMENT */}

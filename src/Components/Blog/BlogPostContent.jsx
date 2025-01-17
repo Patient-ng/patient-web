@@ -9,6 +9,7 @@ import { HiOutlineReply } from 'react-icons/hi'
 import { AiOutlineHeart } from 'react-icons/ai'
 import { mockPost } from '@/lib/mockpost'
 import { FaGoogle, FaFacebook, FaTwitter, FaLinkedin } from 'react-icons/fa'
+import { UseBlogStore } from '@/store/blogStore'
 
 
 const TableOfContents = () => (
@@ -45,17 +46,22 @@ const SocialShare = () => (
   </div>
 )
 
-const CommentForm = () => (
+const CommentForm = ({onClick, ...props}) => (
   <div className="flex gap-4">
     <Avatar className="h-8 w-8">
       <AvatarImage src="/avatar-placeholder.png" />
       <AvatarFallback>U</AvatarFallback>
     </Avatar>
-    <div className="flex-1">
+    <div className="flex items-center space-x-2 flex-1">
+    
       <Textarea 
         placeholder="Write your comment here..." 
-        className="mb-2 min-h-[100px] resize-none"
+        className="min-h-12 resize-none"
+        //value={value}
+        //onChange={onChange}
+        {...props}
       />
+      <Button className="h-12 w-auto" onClick={onClick}>Comment</Button>
     </div>
   </div>
 )
@@ -95,9 +101,14 @@ const Comment = ({ comment }) => (
   </div>
 )
 
-export default function BlogPostContent() {
+export default function BlogPostContent({blogData, getBlogs}) {
+  const {postComment} = UseBlogStore()
   const [likes, setLikes] = useState(20)
+  const [comment, setComment] = useState('')
   const [hasLiked, setHasLiked] = useState(false)
+
+
+  console.log("SINGLE BLOG DATA", blogData)
 
   const handleLike = () => {
     if (hasLiked) {
@@ -108,33 +119,54 @@ export default function BlogPostContent() {
     setHasLiked(!hasLiked)
   }
 
+  const handlePostComment = async (e) => {
+    e.preventDefault();
+    await postComment({id: blogData?._id, comments: comment})
+    getBlogs({id: blogData?.urlSlug?.slice(1)})
+  }
+
+  console.log("COMMENT", comment)
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
-      <div className="grid md:grid-cols-[200px_1fr] gap-12">
+      {/* <div className="grid md:grid-cols-[200px_1fr] gap-12"> */}
+      <div className="grid gap-12">
         {/* Sidebar */}
-        <aside className="space-y-8">
+        {/* <aside className="space-y-8">
           <TableOfContents />
           <SocialShare />
-        </aside>
+        </aside> */}
 
         {/* Main Content */}
         <article className="prose prose-gray max-w-none">
-          <div className="flex items-center gap-4 text-sm text-emerald-500 mb-4">
+          {/* <div className="flex items-center gap-4 text-sm text-emerald-500 mb-4">
             <span>20k</span>
             <span>15k</span>
-          </div>
+          </div> */}
 
           <div 
-            dangerouslySetInnerHTML={{ __html: mockPost.content }}
+            dangerouslySetInnerHTML={{ __html: blogData?.content }}
             className="mb-8"
           />
 
-          <img
-            src={mockPost.image}
-            alt="Modern workspace"
-            className="w-full rounded-lg mb-2"
-          />
-          <p className="text-sm text-gray-500 text-center">[image owner]</p>
+          <div className='flex items-center mb-2'>
+          
+          {blogData?.publisherImage ?
+           <img
+           crossOrigin='anonymous'
+           src={`${import.meta.env.VITE_MAIN_URL}/${blogData?.publisherImage}`}
+           alt="Modern workspace"
+           className="w-full rounded-lg "
+         />
+          : 
+          <Avatar className="h-10 w-10">
+           {/* <AvatarImage src={writerImage} alt="Abayomi Olowu" />  */}
+          <AvatarFallback>{blogData?.publisher?.slice(0,1)}</AvatarFallback>
+          </Avatar>
+          }
+           
+          <p className="text-sm text-gray-500 ">{blogData?.publisher}</p>
+          </div>
 
           {/* Engagement Section */}
           <div className="border-t border-b py-6 my-8">
@@ -146,7 +178,7 @@ export default function BlogPostContent() {
                 className="flex items-center gap-2 text-sm text-gray-600 hover:text-emerald-500"
               >
                 <BiLike className="h-5 w-5" />
-                Like ({likes})
+                Like ({blogData?.likes?.length})
               </button>
               <button className="flex items-center gap-2 text-sm text-gray-600 hover:text-emerald-500">
                 <FaRegComment className="h-5 w-5" />
@@ -160,20 +192,25 @@ export default function BlogPostContent() {
           </div>
 
           {/* Comments Section */}
-          <div className="space-y-8">
+          {/* <div className="space-y-8">
             <h3 className="text-lg font-medium">
-              Comments ({mockPost.comments.length})
+              Comments ({blogData?.comments?.length})
             </h3>
             
             {mockPost.comments.map((comment) => (
               <Comment key={comment.id} comment={comment} />
             ))}
+            
+            <CommentForm
+             value={comment}
+             onChange={(e)=> setComment(e.target.value)}
+             onClick={handlePostComment}
+             />
 
-            <CommentForm />
-          </div>
+          </div> */}
 
           {/* Related Article */}
-          <div className="mt-12">
+          {/* <div className="mt-12">
             <div className="bg-gray-50 p-6 rounded-lg">
               <span className="text-red-500 text-sm font-medium">Hot</span>
               <h3 className="text-xl font-medium mt-2">
@@ -182,6 +219,7 @@ export default function BlogPostContent() {
               <p className="text-gray-600 mt-2 text-sm">
                 Working from home requires self-discipline to stay focused amidst potential distractions. Setting boundaries between work and personal life is crucial to maintain a healthy work-life balance and prevent burnout.
               </p>
+              
               <div className="flex gap-4 mt-4">
                 <button className="flex items-center gap-2 text-sm text-gray-600 hover:text-emerald-500">
                   <AiOutlineHeart className="h-4 w-4" />
@@ -197,7 +235,7 @@ export default function BlogPostContent() {
                 </button>
               </div>
             </div>
-          </div>
+          </div> */}
         </article>
       </div>
     </div>

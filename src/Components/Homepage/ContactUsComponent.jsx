@@ -12,7 +12,7 @@ export const ContactUsSection = () => {
                     <span className='text-xl font-semibold'>Patient.ng</span>
                 </div>
                 <div>
-                    <h2 className='text-4xl text-center'>Stay on top of your XXXX Today.</h2>
+                    <h2 className='text-4xl text-center'>Launch your own campaign today.</h2>
                     <p className='text-lg text-center'>
                         We believe in putting patients at the center of their healthcare journey.
                     </p>

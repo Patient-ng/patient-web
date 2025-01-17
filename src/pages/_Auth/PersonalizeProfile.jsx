@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+/* import { useState, useEffect, useRef } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -103,16 +103,16 @@ export default function PersonalizeProfile() {
                 name="age"
                 type="number"
                 placeholder="Enter age"
-                value={formData.age}
-                onChange={handleInputChange}
+                //value={formData.age}
+                //onChange={handleInputChange}
               />
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="gender">Gender</Label>
               <Select
-                value={formData.gender}
-                onValueChange={(value) => setFormData(prev => ({ ...prev, gender: value }))}
+                //value={formData.gender}
+                //onValueChange={(value) => setFormData(prev => ({ ...prev, gender: value }))}
               >
                 <SelectTrigger id="gender">
                   <SelectValue placeholder="Select" />
@@ -135,8 +135,8 @@ export default function PersonalizeProfile() {
                     id="location"
                     name="location"
                     placeholder="Search location"
-                    value={formData.location}
-                    onChange={handleInputChange}
+                    //value={formData.location}
+                    //onChange={handleInputChange}
                     className="pl-8"
                   />
                 </div>
@@ -172,4 +172,4 @@ export default function PersonalizeProfile() {
       </Card>
     </div>
   )
-}
+} */

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button } from "@/components/ui/button"
+import { Link } from 'react-router'
 
 const Step = ({ number, title, description }) => (
   <div className="flex items-start mb-8">
@@ -16,21 +17,21 @@ const Step = ({ number, title, description }) => (
 const HowItWorks = () => {
   const steps = [
     {
-      title: "Choose a Campaign",
+      title: "Start your fundraising",
       description: "Explore health initiatives and select the campaign you're passionate about supporting."
     },
     {
-      title: "Make a Donation",
-      description: "Contribute a donation of any amount and help us reach our fundraising goal."
+      title: "Share with your friends",
+      description: "Send emails, Send text messages, Send on social media."
     },
     {
-      title: "Track Progress",
-      description: "Monitor the impact of your donation in real-time and see how it's making a difference."
+      title: "Manage donations",
+      description: "Accept donations, Thank donors, Withdraw funds"
     },
-    {
+    /* {
       title: "See Impact",
       description: "Discover the tangible results of your support and the transformative changes it's brought about."
-    }
+    } */
   ]
 
   return (
@@ -45,9 +46,11 @@ const HowItWorks = () => {
             {steps.map((step, index) => (
               <Step key={index} number={index + 1} {...step} />
             ))}
+            <Link to="/campaigns">
             <Button className="bg-emerald-500 hover:bg-emerald-600 text-white">
               Support a Campaign
             </Button>
+            </Link>
           </div>
           <div className="md:w-1/2">
             <img 

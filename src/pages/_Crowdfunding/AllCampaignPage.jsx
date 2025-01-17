@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Search } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -6,6 +6,7 @@ import CampaignCard from '@/components/crowdFunding/CampaignCard'
 import Header from '@/components/header'
 import Footer from '@/components/Footer'
 import LeaderboardCard from '@/components/crowdFunding/LeaderboardCard'
+import { UseCampaignStore } from '@/store/campaignStore'
 
 // Placeholder campaigns data - would be fetched from API
 const allCampaigns = Array(12).fill().map((_, index) => ({
@@ -31,10 +32,18 @@ const trendingCampaigns = Array(3).fill().map((_, index) => ({
 }))
 
 export default function AllCampaigns() {
+  const {getAllCampaigns, campaignData} = UseCampaignStore()
   const [activeTab, setActiveTab] = useState('trending')
   const [searchQuery, setSearchQuery] = useState('')
   const [campaigns, setCampaigns] = useState(allCampaigns)
   const [trending, setTrending] = useState(trendingCampaigns)
+
+
+  
+
+  useEffect(()=> {
+    getAllCampaigns()
+  },[])
 
   const handleLike = (id, isTrending = false) => {
     const updateCampaigns = (prevCampaigns) =>
@@ -54,6 +63,31 @@ export default function AllCampaigns() {
       setCampaigns(updateCampaigns)
     }
   }
+
+  /* const getTop5Users = (userList) => {
+    // Sort users by likes in descending order
+    const sortedUsers = [...userList].sort((a, b) => b.likes.length - a.likes.length);
+  
+    // Get the top 5 users
+    return sortedUsers.slice(0, 5);
+  }; */
+
+  const getTop5Users = (userList = []) => {
+    if (!Array.isArray(userList)) {
+      console.error('Invalid input: userList is not an array');
+      return [];
+    }
+  
+    // Sort users by likes in descending order
+    const sortedUsers = [...userList].sort((a, b) => b.likes.length - a.likes.length);
+  
+    // Get the top 5 users
+    return sortedUsers?.slice(0, 5);
+  };
+  
+  // Example usage
+  const topCampaings = getTop5Users(campaignData);
+  //console.log("TOP 5 CAMPAIGNS",topCampaings);
   
 
   const handleSearch = (e) => {
@@ -69,7 +103,7 @@ export default function AllCampaigns() {
         <div className="mx-auto py-6">
           {/* Navigation and Search */}
           <div className="flex flex-col md:flex-row justify-between items-center mb-8 space-y-4 md:space-y-0">
-            <div className="flex space-x-4">
+            {/* <div className="flex space-x-4">
               <Button
                 variant={activeTab === 'trending' ? 'default' : 'ghost'}
                 className={activeTab === 'trending' ? 'bg-emerald-500 hover:bg-emerald-600 text-white' : ''}
@@ -84,7 +118,7 @@ export default function AllCampaigns() {
               >
                 Near you
               </Button>
-            </div>
+            </div> */}
             
             <form onSubmit={handleSearch} className="flex w-full md:w-auto">
               <div className="relative flex-grow md:w-80">
@@ -110,11 +144,11 @@ export default function AllCampaigns() {
             {/* All Campaigns section */}
             <div className="lg:w-3/4 ">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {campaigns.map((campaign, index) => (
+                {campaignData?.map((campaign, index) => (
                   <CampaignCard
                     key={index}
-                    {...campaign}
-                    onLike={() => handleLike(campaign.id)}
+                    campaign={campaign}
+                    onLike={() => handleLike(campaign._id)}
                   />
                 ))}
               </div>
@@ -123,12 +157,15 @@ export default function AllCampaigns() {
             {/*leaderboard Campaigns section */}
             <div className="lg:w-1/4">
               <h2 className="text-2xl font-bold mb-4">Leaderboard</h2>
-              <div className=" space-y-2" style={{ maxHeight: 'calc(100vh)' }}>
-                {trending.map((campaign, index) => (
+              <div className=" space-y-2" 
+              //style={{ maxHeight: 'calc(100vh)' }}
+              >
+                {topCampaings?.map((campaign, index) => (
                   <LeaderboardCard
                     key={index}
-                    {...campaign}
-                    onLike={() => handleLike(campaign.id, true)}
+                    index={index}
+                    campaign={campaign}
+                    onLike={() => handleLike(campaign._id, true)}
                   />
                 ))}
 

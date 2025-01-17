@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
-import { MapPin } from 'lucide-react'
+import { Heart, MapPin } from 'lucide-react'
+import { UseCampaignStore } from '@/store/campaignStore'
 
 const statusColors = {
   awaiting_review: 'bg-yellow-100 text-yellow-800',
@@ -36,15 +37,26 @@ export default function CrowdfundingCardTab({
   goal,
   donationsCount,
   onEdit,
-  onDelete
+  onDelete,
+  userId
+
 }) {
   const progressPercentage = (amountRaised / goal) * 100
+
+  const {getUserCampaign, userCampaign} = UseCampaignStore()
+
+  useEffect(()=> {
+    getUserCampaign({id: userId})
+  },[])
+
+ console.log("user Campaign", userCampaign)
+  //console.log("user ID", userId)
 
   return (
     <div className="bg-white rounded-lg overflow-hidden shadow-lg">
       <div className="relative">
         <img
-          src={image}
+          crossOrigin='anonymous' src={`${import.meta.env.VITE_MAIN_URL}/${userCampaign?.image}`}
           alt="Campaign"
           className="w-full h-[300px] object-cover"
         />
@@ -53,7 +65,7 @@ export default function CrowdfundingCardTab({
             variant="secondary" 
             className={`${statusColors[status]} border-none`}
           >
-            {statusText[status]}
+            Status {userCampaign?.status}
           </Badge>
         </div>
         <div className="absolute top-4 right-4 flex gap-2">
@@ -78,22 +90,26 @@ export default function CrowdfundingCardTab({
         <div className="flex items-center gap-3">
           <Avatar className="h-10 w-10">
             <AvatarImage src={organizer.avatar} />
-            <AvatarFallback>{organizer.avatarFallback}</AvatarFallback>
+            <AvatarFallback>{userCampaign?.user?.firstName.slice(0,1)}</AvatarFallback>
           </Avatar>
           <p className="text-sm text-gray-700">
-            <span className="font-semibold text-gray-900">{organizer.name}</span>
+            <span className="font-semibold text-gray-900">{userCampaign?.user?.firstName} {userCampaign?.user?.lastName}</span>
             {' is organising a '}
             <span className="text-gray-900">fundraiser on behalf of </span>
-            <span className="font-semibold text-gray-900">{beneficiary}</span>
+            <span className="font-semibold text-gray-900">{userCampaign?.fundraisingFor}</span>
           </p>
         </div>
 
         <div className="flex items-center gap-2 text-sm text-gray-500">
           <MapPin className="h-4 w-4" />
-          {location}
+          {userCampaign?.location?.state}, {userCampaign?.location?.lga}
+        </div>
+        <div className="flex items-center gap-2 text-sm text-gray-500">
+        <Heart className="h-4 w-4 mr-2" color='#10b981' />
+        {userCampaign?.likes?.length} Likes
         </div>
 
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <div className="flex items-baseline justify-between">
             <h3 className="text-lg font-semibold">
               {formatCurrency(amountRaised)} raised
@@ -104,7 +120,7 @@ export default function CrowdfundingCardTab({
           </div>
           <Progress value={progressPercentage} className="h-3 mb-2 bg-gray-100 [&>div]:bg-emerald-500" />
           <p className="text-sm text-gray-500">{donationsCount} donations</p>
-        </div>
+        </div> */}
       </div>
     </div>
   )

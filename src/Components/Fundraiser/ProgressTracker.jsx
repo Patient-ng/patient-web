@@ -33,11 +33,11 @@ const ProgressTracker = ({ steps, currentStep }) => {
       {/* Desktop view */}
       <div className="hidden md:block">
         {steps.map((step, index) => (
-          <div key={step.number} className="relative">
-            {index !== steps.length - 1 && (
+          <div key={step.number} className="relative flex-col space-y-6">
+            {index !== steps.length - 5  && (
               <div
-                className={`absolute left-[18px] top-[20px] h-full w-[2px] ${
-                  step.number < currentStep ? 'bg-emerald-500' : 'bg-gray-200'
+                className={`absolute left-[18px] -top-[30px] h-full w-[2px] ${
+                  step.number < currentStep ? 'bg-emerald-500 ' : 'bg-gray-200 '
                 }`}
               />
             )}
@@ -61,7 +61,7 @@ const ProgressTracker = ({ steps, currentStep }) => {
                 >
                   {step.title}
                 </h3>
-                <p className="text-sm text-gray-500">{step.description}</p>
+                 {/* <p className="text-sm text-gray-500">{step.description}</p> */} 
               </div>
             </div>
           </div>

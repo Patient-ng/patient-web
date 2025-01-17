@@ -1,13 +1,14 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
+import { Link } from 'react-router';
 
 const FeatureSection = () => {
   const steps = [
-    { number: '1', title: 'Informal Complaint' },
+    { number: '1', title: 'Informal Complaint (STEP 1)' },
     { number: '2', title: 'Formal Complaint' },
-    { number: '3', title: 'What to Include in your Complaint' },
-    { number: '4', title: 'Submit your complaint online' },
-    { number: '5', title: 'Request the HSE to review the complaint' }
+    { number: '3', title: 'Include your bio details' },
+    { number: '4', title: 'Submit your Complaint' },
+    { number: '5', title: 'Request Further Review' }
   ];
 
   return (
@@ -26,8 +27,9 @@ const FeatureSection = () => {
               Advocacy
             </span>
 
-            <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
-              Let us guide you through every step of your healthcare journey
+            <h2 className="mt-4 text-xl font-bold tracking-tight sm:text-2xl md:text-2xl">
+            This is a detailed process flow for launching and promoting the Revamped and Upgraded
+            Patient Campaigns feature on the Patient.ng website
             </h2>
 
             <div className="mt-8 space-y-4">
@@ -46,9 +48,12 @@ const FeatureSection = () => {
               ))}
             </div>
 
+
+            <Link to="/advocacy">
             <Button className="mt-8 w-fit bg-emerald-500 hover:bg-emerald-600">
-              CTA
+              Submit your Complaint
             </Button>
+            </Link>
           </div>
         </div>
       </div>

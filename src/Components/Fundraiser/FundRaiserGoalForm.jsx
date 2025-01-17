@@ -26,7 +26,7 @@ const FundraiserGoalForm = ({ value, onChange, onEdit }) => {
             <div className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-white">
               <Check className="h-4 w-4" />
             </div>
-            <h3 className="text-base font-medium">Share the details of your fundraising with donors</h3>
+            <h3 className="text-base font-medium">Share the details of your Campaign</h3>
           </div>
           <Button variant="ghost" size="sm" onClick={() => onEdit(2)}>
             Edit
@@ -38,7 +38,7 @@ const FundraiserGoalForm = ({ value, onChange, onEdit }) => {
             <div className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-white">
               <Check className="h-4 w-4" />
             </div>
-            <h3 className="text-base font-medium">Who are you fundraising for?</h3>
+            <h3 className="text-base font-medium">Who are you campaigning for?</h3>
           </div>
           <Button variant="ghost" size="sm" onClick={() => onEdit(3)}>
             Edit

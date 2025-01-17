@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { MapPin, ArrowRight, Heart } from "lucide-react";
 import { Link } from 'react-router-dom';
 import LeaderboardComponent from './LeaderboardComponent';
+import { UseCampaignStore } from '@/store/campaignStore';
+import CampaignCard from '../CrowdFunding/CampaignCard';
 //import { campaigns } from '@/lib/mockCampaigns.';
 
 const CrowdfundingSection = () => {
@@ -49,6 +51,11 @@ const CrowdfundingSection = () => {
       isLiked: false
     }
   ])
+  const {getAllCampaigns, campaignData} = UseCampaignStore()
+
+useEffect(()=> {
+    getAllCampaigns()
+  },[])
 
   const handleLike = (id) => {
     setCampaigns(prevCampaigns =>
@@ -68,7 +75,7 @@ const CrowdfundingSection = () => {
   return (
     <>
       {/* Hero Section */}
-      <section className="overflow-hidden px-6 py-24">
+      <section className="overflow-hidden px2 md:px-6 py-10 md:py-24">
         <div className="px-4">
           <div className="grid gap-12 lg:grid-cols-2">
             <div className="flex flex-col justify-center">
@@ -81,39 +88,49 @@ const CrowdfundingSection = () => {
               <p className="mt-4 text-lg text-gray-600">
                 Join us in funding critical healthcare projects and making an impact in the lives of patients and communities. Every contribution counts.
               </p>
-              <Button className="mt-8 w-fit bg-emerald-500 hover:bg-emerald-600">
-                CTA
-              </Button>
+              <Link to={'/campaigns'}>
+            <Button
+              variant="outline"
+              className="group mt-8 w-fit bg-emerald-500 hover:bg-emerald-600 text-white"
+              
+            >
+              See all Campaigns
+              <ArrowRight className="text-white ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Button>
+            </Link>
             </div>
-            <div className="relative">
-              <img
+            <div className="relative flex justify-end">
+              {/* <img
                 src="/dental checkup.png"
                 alt="Healthcare provider with child patient"
                 className="rounded-3xl object-cover"
-              />
+              /> */}
+              <LeaderboardComponent />
             </div>
           </div>
         </div>
       </section>
 
       {/* Campaigns Section */}
-      <section className="bg-gray-50 py-14">
-        <LeaderboardComponent />
+      <section className="bg-gray-50 py-20">
+        {/* <LeaderboardComponent /> */}
         <div className="px-4">
+        <h2 className='text-2xl md:text-4xl font-bold mb-5'>Featured Campaigns</h2>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {campaigns.map((campaign) => (
-              <Card key={campaign.id} className="overflow-hidden">
+          {/* {campaignData?.map((campaign) => (
+              <Card key={campaign._id} className="overflow-hidden">
                 <CardContent className="p-0">
                   <div className='relative'>
                     <img
-                      src={campaign.image}
-                      alt={campaign.title}
+                      crossOrigin='anonymous' 
+                      src={`${import.meta.env.VITE_MAIN_URL}/${campaign?.image}`}
+                      alt={campaign?.title}
                       className="w-full object-cover"
                     />
                     <Button
                     variant="ghost"
                     className="absolute h-12 bottom-0 right-4 shadow-sm transform translate-y-1/2 bg-white  hover:bg-gray-50 flex items-center gap-1.5 rounded-sm px-4 py-2"
-                    onClick={() => handleLike(campaign.id)}
+                    onClick={() => handleLike(campaign?._id)}
                   >
                     <Heart
                     size={25}
@@ -123,7 +140,7 @@ const CrowdfundingSection = () => {
 
                     />
                     <span className={`text-sm ${campaign.isLiked ? 'text-emerald-500' : 'text-gray-500'}`}>
-                      {campaign.likes}
+                      {campaign?.likes?.length}
                     </span>
                   </Button>
 
@@ -131,18 +148,22 @@ const CrowdfundingSection = () => {
                   <div className="p-6 pt-8">
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                       <MapPin className="h-4 w-4 text-emerald-500" />
-                      {campaign.location}
+                      {campaign?.location?.state} {campaign?.location?.lga}
                     </div>
                     
-                    <h3 className="mt-2 text-xl font-bold">{campaign.title}</h3>
+                    <h3 className="mt-2 text-xl font-bold">{campaign?.title}</h3>
                     <p className="mt-2 text-gray-600">
-                      {campaign.description}
+                      {campaign?.description.slice(0, 130)}...
                     </p>
                     
                   </div>
                 </CardContent>
               </Card>
-            ))}
+            ))} */}
+
+         {campaignData?.slice(0, 3).map((campaign, index) => (
+            <CampaignCard key={index} campaign={campaign} onLike={() => handleLike(campaign?._id)} />
+          ))}
 
             {/* Original Campaign card section. DO NOT DELETE */}
 

@@ -3,7 +3,7 @@ import { Button } from "../ui/button"
 import { Link } from "react-router-dom"
 import { FaHeart } from 'react-icons/fa'
 
-const LeaderboardCard = ({ image, title, raised, goal, description, isLiked, likes, onLike }) => {
+const LeaderboardCard = ({ image, title, raised, goal, description, isLiked, likes, onLike, index, campaign }) => {
   const raisedNum = parseInt(raised, 10)
   const goalNum = parseInt(goal, 10)
 
@@ -16,24 +16,23 @@ const LeaderboardCard = ({ image, title, raised, goal, description, isLiked, lik
   }
   
   return (
-    <Link to={`/campaigns/${title.toLowerCase().replace(/ /g, '-')}`} className="block">
+    <Link to={`/campaigns/${campaign?._id}`} className="block">
       <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow p-4">
         <div className="flex">
+          <span className='flex-shrink-0 w-[24px] h-[24px] flex justify-center items-center rounded-full bg-green-500 text-white mr-4 mt-1'>{index + 1}</span>
           <div className="flex-shrink-0 mr-4 relative">
-            <img src={image} alt={title} className="w-16 h-16 object-cover rounded-lg" />
+            <img crossOrigin='anonymous' src={`${import.meta.env.VITE_MAIN_URL}/${campaign?.image}`} alt={title} className="w-14 h-14 object-cover rounded-lg" />
             
           </div>
           <div className="flex-grow">
-            <h3 className="font-semibold mb-1">{title}</h3>
+            <h3 className="font-semibold mb-1">{campaign?.fundraisingFor}</h3>
             <p className="text-gray-600 text-sm mb-2 line-clamp-2">
-              {description}
+              {campaign?.description?.slice(0,80)}...
             </p>
             <div className="ml-2 flex items-center gap-1 text-xs text-gray-500">
             <FaHeart size='20px' color="#10b981" className='' />
             {/* /. */}
-              <span className='font-bold'>
-              {likes}
-              </span>
+              <span className='font-bold'>{campaign?.likes?.length}</span>
              Green heart likes
              </div>
             {/* <div className="flex items-center justify-between text-sm">

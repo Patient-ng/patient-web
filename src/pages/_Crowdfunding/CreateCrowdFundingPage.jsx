@@ -51,7 +51,7 @@ const CreateFundraiserContent = () => {
 
   return (
     <AppLayout showHeader={true} loggedIn={true}>
-      <div className="mx-auto px-4 h-[calc(100vh-theme(spacing.16))] flex flex-col">
+      <div className="mx-auto px-4  flex flex-col">
         <div className="flex-grow flex flex-col md:flex-row overflow-hidden">
           <div className="md:w-[300px] flex-shrink-0">
             <div className="sticky top-0 z-10 bg-gray-50 p-4 h-[20%] md:h-full">

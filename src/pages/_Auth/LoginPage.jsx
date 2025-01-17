@@ -1,76 +1,44 @@
-import { useState } from 'react'
-import AuthForm from "@/components/auth/AuthForm"
-import AuthFooter from '@/components/auth/AuthFooter'
+import { useEffect, useState } from 'react'
 import AuthLayout from '@/Components/Auth/AuthLayout'
 import { Button } from '@/Components/ui/button'
 import { FormInput } from '@/Components/FormInput'
 import { CustomButton } from '@/Components/CustomButton'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
+import useAuthStore from '@/store/authStore'
+import PasswordInputField from '@/Components/PasswordInputField'
 
 export const LoginPage = () => {
+  const {login, user} = useAuthStore()
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   })
 
+  const navigate = useNavigate()
+
   const handleInputChange = (e) => {
-    const { name, value } = e.target
+    const { name, value, type, checked } = e.target
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: type === 'checkbox' ? checked : value
     }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     console.log('Form submitted:', formData)
     // Handle form submission
+    await login({email: formData.email, password:formData.password})
   }
 
-  const fields = [
-    {
-      id: 'email',
-      label: 'Email address',
-      type: 'email',
-      placeholder: 'james@patient.ng',
-      props: {
-        name: 'email',
-        value: formData.email,
-        onChange: handleInputChange,
-      },
-    },
-    {
-      id: 'password',
-      label: 'Password',
-      type: 'password',
-      placeholder: '••••••••',
-      props: {
-        name: 'password',
-        value: formData.password,
-        onChange: handleInputChange,
-      },
-    }
-  ]
+  useEffect(() => {
+   if(user){
+    navigate('/')
+   }
+  },[user])
 
   return (
     <>
-    {/*<div className="min-h-screen flex items-center justify-center p-4">
-       <AuthForm
-        title="Welcome back"
-        subtitle="Please enter your details to login."
-        fields={fields}
-        showSocial={true}
-        submitText="Sign In"
-        footerText="Don't have an account?"
-        footerLink="/signup"
-        footerLinkText="Register"
-        onSubmit={handleSubmit}
-        className="w-full max-w-[400px]"
-      />
-      <AuthFooter /> 
-
-      <>hello Login</>
-    </div>*/}
 
     <AuthLayout
       title="Welcome Back"
@@ -85,37 +53,19 @@ export const LoginPage = () => {
             label="Email Address"
             id="email"
             type="email"
-            //type={field.type === 'password' ? (showPassword ? 'text' : 'password') : field.type}
             placeholder="email@gmail.com"
+            value={formData?.email}
+            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             
           />
 
-          {/* {field.type === 'password' && (
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? (
-                <EyeOff className="h-4 w-4 text-gray-500" />
-              ) : (
-                <Eye className="h-4 w-4 text-gray-500" />
-              )}
-              <span className="sr-only">
-                {showPassword ? 'Hide password' : 'Show password'}
-              </span>
-            </Button>
-          )} */}
 
-          <FormInput
+          <PasswordInputField
             label="Password"
             id="newPassword"
-            type="password"
             placeholder="password"
-            //value={formData.newPassword}
-            //onChange={handleInputChange}
+            value={formData.password}
+            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
           />
 
           <p className='my-3'>
@@ -124,7 +74,7 @@ export const LoginPage = () => {
             </Link>
           </p>
 
-          <CustomButton className='w-full h-[40px] bg-emerald-500 hover:bg-emerald-800'>
+          <CustomButton className='w-full h-[40px] bg-emerald-500 hover:bg-emerald-800' onClick={handleSubmit}>
            Login
           </CustomButton>
 

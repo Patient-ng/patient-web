@@ -11,9 +11,10 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card } from "@/components/ui/card"
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
 import { Label } from '../ui/label'
+import { nigeriaStates } from '@/lib/states'
 
 // Mock data - replace with actual data from your API
-const states = [
+/* const states = [
   "Lagos",
   "Abuja",
   "Rivers",
@@ -25,7 +26,9 @@ const lgas = {
   Abuja: ["Abaji", "Bwari", "Gwagwalada"],
   Rivers: ["Port Harcourt", "Obio-Akpor", "Eleme"],
   // Add more LGAs
-}
+} */
+
+  
 
 const duration = [
   "1 month",
@@ -48,6 +51,8 @@ const FundraiserDetailsForm = ({ formData, updateFormData }) => {
     updateFormData({ [name]: value })
   }
 
+  const nigerian = nigeriaStates
+
   const handleStateChange = (value) => {
     updateFormData({ 
       state: value,
@@ -63,17 +68,21 @@ const FundraiserDetailsForm = ({ formData, updateFormData }) => {
     updateFormData({ duration: value })
   }
 
+  const lgas = formData?.state && nigerian?.find((s) => s.state === formData?.state)?.lgas || [];
+
   const handleCategoryChange = (value) => {
     updateFormData({ category: value })
   }
 
+  console.log("state and lga", formData?.state, "|", formData?.lga)
+
   return (
-    <Card className="p-6">
-      <h2 className="text-xl font-medium mb-6">Share the details of your fundraising with donors</h2>
+    <Card className="p-6 ">
+      <h2 className="text-xl font-medium mb-6">Share the details of your campaign with donors</h2>
       <div className="space-y-6">
         <div>
           <label htmlFor="title" className="block text-sm font-medium mb-2">
-            Fundraiser title
+            Campaign title
           </label>
           <Input
             type="text"
@@ -96,9 +105,9 @@ const FundraiserDetailsForm = ({ formData, updateFormData }) => {
                 <SelectValue placeholder="Select state" />
               </SelectTrigger>
               <SelectContent>
-                {states.map((state) => (
-                  <SelectItem key={state} value={state}>
-                    {state}
+                {nigerian?.map((state) => (
+                  <SelectItem key={state?.alias} value={state?.state}>
+                    {state?.state}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -113,7 +122,7 @@ const FundraiserDetailsForm = ({ formData, updateFormData }) => {
                 <SelectValue placeholder="Select LGA" />
               </SelectTrigger>
               <SelectContent>
-                {formData.state && lgas[formData.state]?.map((lga) => (
+                {lgas?.map((lga) => (
                   <SelectItem key={lga} value={lga}>
                     {lga}
                   </SelectItem>
@@ -172,10 +181,11 @@ const FundraiserDetailsForm = ({ formData, updateFormData }) => {
             </RadioGroup> */}
           </div>
         </div>
+        
 
         <div>
           <label htmlFor="description" className="block text-sm font-medium mb-2">
-            Fundraiser description
+            Campaign description
           </label>
           <Textarea
             id="description"

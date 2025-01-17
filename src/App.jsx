@@ -1,9 +1,8 @@
-import React from 'react';
-import {Route, Routes } from 'react-router';
+import React, { useEffect } from 'react';
+import {Navigate, Route, Routes } from 'react-router';
 import Homepage from './pages/Homepage';
 import RegisterPage from './pages/_Auth/SignUpPage';
 import VerifyAccount from './pages/_Auth/VerifyCode';
-import PersonalizeProfile from './pages/_Auth/PersonalizePage';
 import LoginPage from './pages/_Auth/LoginPage';
 import ResetPassword from './pages/_Auth/ResetPassword';
 import VerifyPassword from './pages/_Auth/VerifyPassword';
@@ -25,18 +24,64 @@ import AccountPage from './pages/Account';
 import Advocacy from './pages/Advocacy';
 import AwardsPage from './pages/AwardPage'; 
 import CookieConsent from './components/cookies/CookieConsent';
+import PersonalizeProfile from './pages/_Auth/PersonalizePage';
+import toast, { Toaster } from 'react-hot-toast';
+import useAuthStore from './store/authStore';
+import Contact from './pages/_contact/Contact';
 //import { HelmetProvider } from 'react-helmet-async';
 
 
+const RedirectAuthenticatedUser = ({ children }) => {
+	
+    
+  const token = localStorage.getItem('accessToken')
+// (isAuthenticated && user ) {
+/* if (token) {
+  return <Navigate to='/' replace />;
+} */
+
+  const { isAuthenticated, user } = useAuthStore();
+
+	if (isAuthenticated ) {
+    return <Navigate to='/' replace />;
+	}
+
+return children;
+};
+
+// protect routes that require authentication
+const ProtectedRoute = ({ children }) => {
+	const { isAuthenticated, user } = useAuthStore();
+
+	if (!user) {
+		return <Navigate to='/login' replace />;
+	}
+
+	/* if (!user.isVerified) {
+		return <Navigate to='/verify-email' replace />;
+	} */
+
+	return children;
+};
+
 function App() {
+
+  const {checkAuth, checkingAuth} = useAuthStore()
+
+  useEffect(() => {
+		checkAuth();
+
+	}, [checkAuth]);
+
+  if (checkingAuth ) return;
   return (
     <>
       <Routes>
         <Route path='/' element={<Homepage />} />
          <Route path='/signup' element={<RegisterPage />} />
         <Route path='/verify' element={<VerifyAccount />} />
-       <Route path='/personalize' element={<PersonalizeProfile />} /> 
-        <Route path='/login' element={<LoginPage/>} />
+        <Route path='/personalize' element={<ProtectedRoute><PersonalizeProfile /></ProtectedRoute>} />   
+        <Route path='/login' element={<RedirectAuthenticatedUser><LoginPage/></RedirectAuthenticatedUser>} />
         {/* <Route path='/reset-password' element={<ResetPassword />} />
         <Route path='/verify-password' element={<VerifyPassword />} /> */}
         <Route path='/blog' element={<BlogHome />} />
@@ -53,10 +98,13 @@ function App() {
         <Route path="/podcast/:id" element={<SingleEpisode />} />
         <Route path="/review" element={<ReviewPage />} />
         <Route path="/review/:id" element={<ReviewFacility/>} />
-        <Route path="/account" element={<AccountPage />} />
+        <Route path="/account" element={<ProtectedRoute><AccountPage /></ProtectedRoute>} />
         <Route path="/advocacy" element={<Advocacy/>} />
         <Route path="/awards" element={<AwardsPage />} /> 
+        <Route path="/contact" element={<Contact />} /> 
       </Routes>
+
+      <Toaster />
       <CookieConsent />
     </>
   );

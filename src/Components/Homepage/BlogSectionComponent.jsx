@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { UseBlogStore } from '@/store/blogStore';
 
 const BlogSection = () => {
+  const {getAllBlogs, blogData} = UseBlogStore()
+
+  useEffect(() =>{
+   getAllBlogs()
+  },[])
+
+  console.log("BLOGS LIST", blogData)
   const blogPosts = [
     {
       id: 1,
@@ -56,23 +64,23 @@ const BlogSection = () => {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {blogPosts.map((post) => (
-            <Card key={post.id} className="overflow-hidden border-0">
-              <Link to={`/blog/${post.slug}`}>
+          {blogData?.slice(0,3).map((post) => (
+            <Card key={post._id} className="overflow-hidden border-0">
+              <Link to={`/blog/${post?.slug}`}>
                 <CardContent className="p-0">
                   <div className="aspect-[16/9] overflow-hidden">
                     <img
-                      src={post.image}
-                      alt={post.title}
+                      crossOrigin='anonymous' src={`${import.meta.env.VITE_MAIN_URL}/${post?.titleImage}`}
+                      alt={post?.title}
                       className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
                     />
                   </div>
                   <div className="p-6">
-                    <time className="text-sm text-gray-600" dateTime={post.date}>
-                      {post.date}
+                    <time className="text-sm text-gray-600" dateTime={post?.date}>
+                      {post?.date}
                     </time>
                     <h3 className="mt-2 text-2xl font-bold">
-                      {post.title}
+                      {post?.title}
                     </h3>
                     <Button
                       variant="link"

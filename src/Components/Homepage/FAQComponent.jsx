@@ -9,32 +9,32 @@ import {
 const FAQSection = () => {
   const faqs = [
     {
-      question: "What are the benefits of using automated xxx?",
-      answer: "Expert tips on managing finances and building wealth."
+      question: "What is Patient Campaigns?",
+      answer: "Patient Campaigns is a feature on Patient.ng that allows individuals to create and promote campaigns for urgent healthcare financial needs. The platform enables users to share their stories, gather support from their network, and compete to win weekly funding based on the number of Green-heart Likes their campaign receives."
     },
     {
-      question: "What features are available for me?",
-      answer: "We offer a comprehensive suite of features designed to enhance your healthcare journey, including appointment scheduling, medical record management, and personalized health tracking tools."
+      question: "How does Patient Campaigns work?",
+      answer: "You register on the platform and create a campaign by sharing details of your healthcare need. Your campaign link can be shared across social media and with friends and family to collect Green-heart Likes. Each week, the campaign with the highest number of Green-heart Likes wins full/partial funding support for their medical expenses."
     },
     {
-      question: "How secure is my data on your platform?",
-      answer: "We implement industry-leading security measures and encryption protocols to ensure your personal health information remains private and protected at all times."
+      question: "Who is eligible to create a campaign?",
+      answer: "Anyone in Nigeria who has a verified healthcare need and meets the platform’s guidelines can create a campaign. This includes individuals, caregivers, or families raising funds for medical emergencies, medications, treatments, or surgeries."
     },
     {
-      question: "Can I integrate other tools with your platform?",
-      answer: "Yes, our platform supports integration with various healthcare tools and services, making it easy to consolidate your health management in one place."
+      question: "How do I create a campaign?",
+      answer: "Visit the Patient.ng website and click on the “Create Campaign” button, Fill in the registration form with your details. Upload your story, photos, and any supporting medical documents, Submit your campaign for review. Once approved, it will go live."
     },
     {
-      question: "How do I get started with your platform?",
-      answer: "Getting started is simple. Just create an account, complete your profile, and you'll have immediate access to our full range of healthcare management tools."
+      question: "What information is required for my campaign?",
+      answer: "You will need to provide: A detailed description of your healthcare need, The amount of money required for treatment, Medical documents to verify your claim, A photo or video to personalize your campaign."
     },
     {
-      question: "Is customer support available if I need help?",
-      answer: "Yes, our dedicated support team is available 24/7 to assist you with any questions or concerns you may have about using our platform."
+      question: "How long does it take for my campaign to be approved?",
+      answer: "Campaigns are typically reviewed within 24-48 hours. You will be notified via email once your campaign is live."
     },
     {
-      question: "Can I customize my dashboard?",
-      answer: "Yes, you can personalize your dashboard to display the information and tools most relevant to your healthcare needs."
+      question: "How can I promote my campaign?",
+      answer: "Share your campaign link on WhatsApp, Facebook, Instagram, and other social platforms. Ask friends and family to like and share your campaign, Tag influencers or community groups that might help spread the word."
     }
   ];
 

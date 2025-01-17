@@ -1,17 +1,24 @@
 import BlogPostContent from '@/components/blog/BlogPostContent'
 import BlogPostHeader from '@/components/blog/BlogPostHeader'
 import Header from '@/components/header'
-import React from 'react'
+import { UseBlogStore } from '@/store/blogStore'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 
 export const BlogPost = () => {
-    const { slug } = useParams()    
+    const { id} = useParams()
+    const {getBlog, singleBlog} = UseBlogStore()
 
+    useEffect(() => {
+        getBlog({id: id})
+    },[])
+
+    console.log("BLOG ID", id)
     // Fetch the blog post data based on the slug
      /* const blogPost = getBlogPostBySlug(slug); */
 
     return (
-    <div className='w-full container h-screen'>
+    <div className='w-full h-screen'>
         <Header />
         {/* <section 
         className="h-[400px] bg-contain bg-no-repeat w-full py-4" 
@@ -27,8 +34,8 @@ export const BlogPost = () => {
                 </div>
             </div>
          </section> */}
-         <BlogPostHeader />
-         <BlogPostContent />
+         <BlogPostHeader blogData={singleBlog} getBlogs={getBlog} />
+         <BlogPostContent blogData={singleBlog} getBlogs={getBlog} />
     </div>
     )
 }

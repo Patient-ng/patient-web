@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Country, State, City } from 'country-state-city';
 import { Label } from "@/components/ui/label";
 import {
@@ -8,56 +8,66 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import AuthForm from '@/components/auth/AuthForm';
-import AuthFooter from '@/components/auth/AuthFooter';
+
 import { Link, useNavigate } from 'react-router';
 import { Button } from '@/Components/ui/button';
 import { CustomButton } from '@/Components/CustomButton';
 import { FormInput } from '@/Components/FormInput';
 import AuthLayout from '@/Components/Auth/AuthLayout';
+import useAuthStore from '@/store/authStore';
+import { nigeriaStates } from '@/lib/states';
 
 export default function PersonalizeProfile() {
+  const {userOnboarding, onboardSuccess} = useAuthStore()
   const [formData, setFormData] = useState({
     age: '',
     gender: '',
-    country: '',
     state: '',
-    city: '',
-    streetAddress: '',
+    lga: '',
+    address: '',
   });
   const navigate = useNavigate()
 
-  const countries = Country.getAllCountries();
-  const states = formData.country 
-    ? State.getStatesOfCountry(formData.country)
-    : [];
-  const cities = formData.state
-    ? City.getCitiesOfState(formData.country, formData.state)
-    : [];
+  const nigerian = nigeriaStates
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
+  const handleStateChange = (value) => {
+    setFormData({ 
+      ...formData,
+      state: value,
+      lga: '' // Reset LGA when state changes
+    })
+  }
 
-  const handleSelectChange = (name, value) => {
+  const handleLGAChange = (value) => {
+    setFormData({...formData, lga: value })
+  }
+
+  const lgas = formData?.state && nigerian?.find((s) => s.state === formData?.state)?.lgas || [];
+
+   const handleSelectChange = (name, value) => {
     setFormData(prev => ({
       ...prev,
       [name]: value,
-      ...(name === 'country' ? { state: '', city: '' } : {}),
-      ...(name === 'state' ? { city: '' } : {})
+      /* ...(name === 'country' ? { state: '', city: '' } : {}),
+      ...(name === 'state' ? { city: '' } : {}) */
     }));
-  };
+  }; 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Form submitted:', formData);
     // Handle form submission
-    navigate('/')
+   // await userOnboarding(formData)
+    
   };
+
+  useEffect(() => {
+   if(onboardSuccess){
+    navigate('/')
+   }
+  },[onboardSuccess])
+
+  console.log("FORM DATA", formData)
 
   return (
     
@@ -71,7 +81,7 @@ export default function PersonalizeProfile() {
         <>
         
 
-        <form className="space-y-4 mt-4">
+        <div className="space-y-4 mt-4">
           <FormInput
             id="age"
             label="Age"
@@ -79,7 +89,8 @@ export default function PersonalizeProfile() {
             placeholder="Enter age"
             name="age"
             value={formData.age}
-            onChange={handleInputChange}
+            //onChange={handleInputChange}
+            onChange={(e) => setFormData({ ...formData, age: e.target.value })}
           />
           <FormInput
             id="streetAddress"
@@ -87,15 +98,18 @@ export default function PersonalizeProfile() {
             type="text"
             placeholder="Enter your street address here"
             name="age"
-            value={formData.streetAddress}
-            onChange={handleInputChange}
+            value={formData?.address}
+            //onChange={handleInputChange}
+            onChange={(e) => setFormData({ ...formData, address: e.target.value })}
           />
 
-<div className="space-y-2">
+         <div className="space-y-2">
             <Label htmlFor="gender">Gender</Label>
             <Select
+            defaultValue='male'
               value={formData.gender}
               onValueChange={(value) => handleSelectChange('gender', value)}
+              //onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
             >
               <SelectTrigger id="gender">
                 <SelectValue placeholder="Select" />
@@ -108,8 +122,44 @@ export default function PersonalizeProfile() {
               </SelectContent>
             </Select>
           </div>
+         <div className="space-y-2">
+            <Label htmlFor="gender">State</Label>
+            <Select value={formData.state} onValueChange={handleStateChange}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select state" />
+              </SelectTrigger>
+              <SelectContent>
+                {nigerian?.map((state) => (
+                  <SelectItem key={state?.alias} value={state?.state}>
+                    {state?.state}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-          <div className="space-y-2">
+         <div className="space-y-2">
+            <Label htmlFor="gender">LGA</Label>
+            <Select 
+              value={formData?.lga} 
+              onValueChange={handleLGAChange}
+              //onValueChange={(v) => setFormData({ ...formData, lga: v })}
+              disabled={!formData?.state}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select LGA" />
+              </SelectTrigger>
+              <SelectContent>
+                {lgas?.map((lga, index) => (
+                  <SelectItem key={index} value={lga}>
+                    {lga}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* <div className="space-y-2">
             <Label htmlFor="country">Country</Label>
             <Select
               value={formData.country}
@@ -127,33 +177,7 @@ export default function PersonalizeProfile() {
               </SelectContent>
             </Select>
           </div>
-
-          {/* {field.type === 'password' && (
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? (
-                <EyeOff className="h-4 w-4 text-gray-500" />
-              ) : (
-                <Eye className="h-4 w-4 text-gray-500" />
-              )}
-              <span className="sr-only">
-                {showPassword ? 'Hide password' : 'Show password'}
-              </span>
-            </Button>
-          )} */}
-
-          
-
-          {/* <p className='my-3'>
-          <Link to="/reset-password" className="text-emerald-500 hover:text-emerald-600 ">
-             Forgot your password?
-            </Link>
-          </p> */}
+ */}
 
           <CustomButton onClick={handleSubmit} className='w-full h-[40px] bg-emerald-500 hover:bg-emerald-800'>
            Continue
@@ -168,7 +192,7 @@ export default function PersonalizeProfile() {
           </p>
           
           
-        </form>
+        </div>
         </>
       }
      />

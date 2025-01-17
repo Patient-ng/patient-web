@@ -8,6 +8,8 @@ import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
+import { useEffect } from 'react';
+import { UseCampaignStore } from '@/store/campaignStore';
 
 const LeaderboardComponent = () => {
 
@@ -42,6 +44,7 @@ const LeaderboardComponent = () => {
         likes: 100,
         isLiked: false
       },
+      /* {
       {
         id: "4",
         image: "/victoria.png",
@@ -62,7 +65,6 @@ const LeaderboardComponent = () => {
         likes: 100,
         isLiked: false
       },
-      {
         id: "6",
         image: "/victoria.png",
         title: `Trending: Save Osaze Odemwingie `,
@@ -91,13 +93,42 @@ const LeaderboardComponent = () => {
         goal: 500000,
         likes: 100,
         isLiked: false
-      },
+      }, */
       
 ]
+const {getAllCampaigns, campaignData} = UseCampaignStore()
+   useEffect(()=> {
+    getAllCampaigns()
+  },[])
+
+  /* const getTop5Users = (userList) => {
+    // Sort users by likes in descending order
+    const sortedUsers = [...userList].sort((a, b) => b.likes?.length - a.likes?.length);
+  
+    // Get the top 5 users
+    return sortedUsers?.slice(0, 5);
+  };*/
+
+  const getTop5Users = (userList = []) => {
+    if (!Array.isArray(userList)) {
+      console.error('Invalid input: userList is not an array');
+      return [];
+    }
+  
+    // Sort users by likes in descending order
+    const sortedUsers = [...userList].sort((a, b) => b.likes.length - a.likes.length);
+  
+    // Get the top 5 users
+    return sortedUsers?.slice(0, 5);
+  };
+  
+  // Example usage
+  const topCampaings = getTop5Users(campaignData); 
+  //console.log("TOP 5 CAMPAIGNS",topCampaings);
 
   return (
     <>
-    <div className='mb-20 px-6 border-b-1 border-b-[#7c7c7c]'>
+    {/* <div className='mb-20 px-6 border-b-1 border-b-[#7c7c7c]'>
         <h2 className='text-3xl font-bold my-3'>Top Campaign Leaderboard</h2>
         <Swiper
             slidesPerView={4}
@@ -123,27 +154,16 @@ const LeaderboardComponent = () => {
                 }
                 }}
             spaceBetween={30}
-            //pagination={{clickable: true,}}
+            
             autoplay={{
                 delay: 2000,
                 disableOnInteraction: false,
               }}
               navigation={true}
               modules={[Autoplay, Pagination, Navigation]}
-            //modules={[Pagination]}
+            
             className="mySwiper"
         >
-            {/* <SwiperSlide><div className="h-[300px] bg-[#000] text-[#fff] w-[400px]">slide 1</div></SwiperSlide> */}
-            {/* {services.map((service, index) => (
-                <SwiperSlide key={index}><FeatureCard 
-                    key={index}
-                    cardtitle={service.name}
-                    cardImage={service.image}
-                    cardContent={(service.description).substring(0, 100)}
-                    onClick={() => openModal(service)}
-                />
-                </SwiperSlide>
-            ))} */}
 
         {trendingCampaigns?.map((campaign, index) => (
                 <SwiperSlide key={index}><LeaderboardCard
@@ -154,6 +174,19 @@ const LeaderboardComponent = () => {
                 </SwiperSlide> 
             ))}
         </Swiper>
+        </div> */}
+
+        <div className='  border-l border-l-[#f8f8f8] p-[20px] flex flex-col space-y-3'>
+        <h2 className='text-2xl md:text-3xl font-bold my-3 '>Top Campaign Leaderboard</h2>
+        {topCampaings?.map((campaign, index) => (
+                <div key={index}><LeaderboardCard
+                key={index}
+                index={index}
+                campaign={campaign}
+                //onLike={() => handleLike(campaign.id, true)}
+                />
+                </div> 
+            ))}
         </div>
      
     </>
